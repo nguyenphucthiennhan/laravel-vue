@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\Product;
+
+class HomeController extends Controller
+{
+    //
+    public function index(){
+        $products = Product::with('images')->get();
+        return $products;
+    }
+    public function details($id){
+        $product = Product::with('images')->findOrFail($id);
+        return $product;
+    }
+}
