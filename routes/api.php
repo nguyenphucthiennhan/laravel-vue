@@ -20,3 +20,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/get-all-products', [HomeController::class, 'index'])->name('index');
 Route::get('/get-product-details/{id}', [HomeController::class, 'details'])->name('details');
+Route::get('/get-categories', [HomeController::class, 'categories'])->name('categories');
+Route::get('/get-products-bycate/{id}', [HomeController::class, 'productsByCate'])->name('products.bycate');

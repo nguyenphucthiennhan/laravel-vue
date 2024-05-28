@@ -13,7 +13,7 @@
           <span class="price"><em>{{ product.price }}</em>{{ product.discount }}</span>
         </div>
         <div class="down-content">
-          <span class="category">Action</span>
+          <span class="category">{{ product.category}}</span>
           <h4>{{ product.name }}</h4>
          
           <a href="product-details.html"><i class="fa fa-shopping-bag"></i></a>
@@ -25,21 +25,36 @@
 
 <script>
 export default {
+  props: ['categoryId'],
   data() {
     return {
       products: [],
     };
   },
-  async mounted() {
-    try {
-      const response = await fetch('http://localhost:8000/api/get-all-products');
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+  methods: {
+    async fetchProducts() {
+      let url = 'http://localhost:8000/api/get-all-products';
+      if (this.categoryId) {
+        url = `http://localhost:8000/api/get-products-bycate/${this.categoryId}`;
       }
-      this.products = await response.json();
-    } catch (error) {
-      console.error(error);
-    }
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        this.products = await response.json();
+      } catch (error) {
+        console.error(error);
+      }
+    },
+  },
+  watch: {
+    categoryId: {
+      immediate: true,
+      handler() {
+        this.fetchProducts();
+      },
+    },
   },
 };
 </script>
