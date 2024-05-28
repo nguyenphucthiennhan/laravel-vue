@@ -33,4 +33,8 @@ class HomeController extends Controller
         ->get();  
         return $products;
     }
+    public function search($searchKeyword){
+        $products = Product::where('name', 'like', '%' . $searchKeyword . '%')->with('images')->get();
+       return $products;
+    }
 }
