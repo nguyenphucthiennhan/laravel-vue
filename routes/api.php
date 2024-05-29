@@ -23,3 +23,4 @@ Route::get('/get-product-details/{id}', [HomeController::class, 'details'])->nam
 Route::get('/get-categories', [HomeController::class, 'categories'])->name('categories');
 Route::get('/get-products-bycate/{id}', [HomeController::class, 'productsByCate'])->name('products.bycate');
 Route::get('/search/{searchKeyword}', [HomeController::class, 'search'])->name('search');
+Route::post('/register', [HomeController::class, 'register'])->name('register');

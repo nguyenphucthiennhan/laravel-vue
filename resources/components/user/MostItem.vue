@@ -10,7 +10,7 @@
         </div>
         <div class="col-lg-6">
           <div class="main-button">
-            <a href="shop.html">View All</a>
+            <router-link to="/shop" active-class="active">View All</router-link>
           </div>
         </div>
         <div class="col-lg-2 col-md-6 col-sm-6">

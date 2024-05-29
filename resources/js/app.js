@@ -18,6 +18,7 @@ import '../css/fontawesome.css';
 import '../css/owl.css';
 import '../css/templatemo-lugx-gaming.css';
 import axios from 'axios';
+
 window.axios = axios;
 const app = createApp(App);
 app.use(router);

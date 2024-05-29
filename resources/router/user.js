@@ -32,5 +32,27 @@ const home = [
             },
         ],
     },
+    {
+        path: "/",
+        component: () => import("../layouts/login.vue"),
+        children: [
+            {
+                path: 'login',
+                name: "login",
+                component: () => import("../pages/user/Auth.vue"),
+            },
+        ],
+    },
+    {
+        path: "/",
+        component: () => import("../layouts/register.vue"),
+        children: [
+            {
+                path: 'register',
+                name: "register",
+                component: () => import("../pages/user/Auth.vue"),
+            },
+        ],
+    },
 ];
 export default home;
