@@ -9,12 +9,13 @@
             </div>
             <div>
                 <label for="password">Password:</label>
-                <input class="form-control" placeholder="password" type="password" id="password" v-model="password"
+                <input @input="setMessage" class="form-control" placeholder="password" type="password" id="password" v-model="password"
                     required>
             </div>
-            <button class="btn btn-primary" type="submit">Login</button>
+            <button @onclick="login" class="btn btn-primary" type="submit">Login</button>
             <div class="my-3">
                 <router-link to="/register" active-class="active">Sign Up</router-link>
+                <div class="text-danger" v-if="errorMessage">{{ errorMessage }}</div>
             </div>
         </form>
     </div>
@@ -25,13 +26,36 @@ export default {
     data() {
         return {
             email: '',
-            password: ''
+            password: '',
+            errorMessage:''
         }
     },
     methods: {
         login() {
-            console.log(`Đăng nhập với tên đăng nhập: ${this.email} và mật khẩu: ${this.password}`);
+            if(this.password !=''&& this.email !=''){
+            
+            axios.post('http://localhost:8000/api/login', {
+              password: this.password,
+              email: this.email
+            })
+            .then(response => {
+              if (response.data === 0) {
+                  this.errorMessage = 'Sai Mật Khẩu Hoặc Sai Email!!!';
+              }
+              else{
+                localStorage.setItem('id', JSON.stringify(response.data.id));
+                localStorage.setItem('name', JSON.stringify(response.data.name));
+                this.$router.push('/home');
+              }
+            })
+            .catch(error => {
+              console.error(error);
+            });
         }
+        },
+        setMessage(){
+        this.errorMessage = '';
+    }
     }
 }
 </script>

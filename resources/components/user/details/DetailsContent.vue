@@ -1,5 +1,5 @@
 <template>
-<div class="single-product section">
+  <div class="single-product section">
     <div class="container">
       <div class="row">
         <div class="col-lg-6">
@@ -15,18 +15,19 @@
             <input type="qty" class="form-control" id="1" aria-describedby="quantity" placeholder="1">
             <button type="submit"><i class="fa fa-shopping-bag"></i> ADD TO CART</button>
           </form>
-          <ul>
-            <li><span>Game ID:</span> COD MMII</li>
-            <li><span>Genre:</span> <a href="#">Action</a>, <a href="#">Team</a>, <a href="#">Single</a></li>
-            <li><span>Multi-tags:</span> <a href="#">War</a>, <a href="#">Battle</a>, <a href="#">Royal</a></li>
-          </ul>
+          <br>
+          <div class="like" v-bind:class="{ 'text-danger': liked === 1 }" @click="sendLike"
+            style="font-size: 3em; display: inline-block;">♡ </div>
+            <span v-if="likeStatus === 0" class="count-like" style="font-size: 1.5em;">{{ product.like }}</span>
+            <span v-else class="count-like" style="font-size: 1.5em;">{{ likeStatus }}</span>
         </div>
         <div class="col-lg-12">
-          <div class="sep"></div>
+          <div class="sep">
+          </div>
         </div>
       </div>
     </div>
-  </div>   
+  </div>
 
   <div class="more-info">
     <div class="container">
@@ -37,19 +38,28 @@
               <div class="nav-wrapper ">
                 <ul class="nav nav-tabs" role="tablist">
                   <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab" aria-controls="description" aria-selected="true">Description</button>
+                    <button class="nav-link active" id="description-tab" data-bs-toggle="tab"
+                      data-bs-target="#description" type="button" role="tab" aria-controls="description"
+                      aria-selected="true">Description</button>
                   </li>
                   <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews" type="button" role="tab" aria-controls="reviews" aria-selected="false">Reviews (3)</button>
+                    <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews"
+                      type="button" role="tab" aria-controls="reviews" aria-selected="false">Reviews (3)</button>
                   </li>
                 </ul>
-              </div>              
+              </div>
               <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
+                <div class="tab-pane fade show active" id="description" role="tabpanel"
+                  aria-labelledby="description-tab">
                   <p>{{ product.description }}</p>
                 </div>
                 <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
-                  <p>Coloring book air plant shabby chic, crucifix normcore raclette cred swag artisan activated charcoal. PBR&B fanny pack pok pok gentrify truffaut kitsch helvetica jean shorts edison bulb poutine next level humblebrag la croix adaptogen. <br><br>Hashtag poke literally locavore, beard marfa kogi bruh artisan succulents seitan tonx waistcoat chambray taxidermy. Same cred meggings 3 wolf moon lomo irony cray hell of bitters asymmetrical gluten-free art party raw denim chillwave tousled try-hard succulents street art.</p>
+                  <p>Coloring book air plant shabby chic, crucifix normcore raclette cred swag artisan activated
+                    charcoal. PBR&B fanny pack pok pok gentrify truffaut kitsch helvetica jean shorts edison bulb
+                    poutine next level humblebrag la croix adaptogen. <br><br>Hashtag poke literally locavore, beard
+                    marfa kogi bruh artisan succulents seitan tonx waistcoat chambray taxidermy. Same cred meggings 3
+                    wolf moon lomo irony cray hell of bitters asymmetrical gluten-free art party raw denim chillwave
+                    tousled try-hard succulents street art.</p>
                 </div>
               </div>
             </div>
@@ -65,7 +75,9 @@ export default {
   data() {
     return {
       productId: null,
-      product:[]
+      product: [],
+      likeStatus: 0,
+      liked: 0
     };
   },
   created() {
@@ -73,15 +85,83 @@ export default {
   },
   async mounted() {
     try {
-        let id = this.productId;
+      let id = this.productId;
       const response = await fetch(`http://localhost:8000/api/get-product-details/${id}`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       this.product = await response.json();
+      this.getStatusLike();
     } catch (error) {
       console.error(error);
     }
   },
+  methods: {
+    async sendLike() {
+      try {
+        let user_id = JSON.parse(localStorage.getItem('id'));
+        const response = await axios.post('http://localhost:8000/api/like', {
+          user_id: user_id,
+          product_id: this.product.id,
+        });
+        this.likeStatus = response.data;
+        this.product.like = this.likeStatus;
+        this.getStatusLike();
+        const element = document.querySelector('.count-like');
+        const delay = Math.random() * 5;
+        element.style.animationDelay = `${delay}s`;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async getStatusLike() {
+      try {
+        let user_id = JSON.parse(localStorage.getItem('id'));
+        const response = await axios.post('http://localhost:8000/api/like-status', {
+          user_id: user_id,
+          product_id: this.product.id,
+        });
+        this.liked = response.data;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+  }
+
 };
 </script>
+<style scoped>
+.count-like {
+  position: absolute;
+  animation: visible 1s cubic-bezier(0.6, -0.28, 0.735, 0.045) both;
+}
+.like {
+  transition: 1s cubic-bezier(0.6, -0.28, 0.735, 0.045);
+}
+.like:hover {
+  animation: scale 1s infinite ease-out alternate;
+}
+@keyframes visible {
+  0% {
+    opacity: 0;
+    transform: rotate(0deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: rotate(1800deg);
+  }
+}
+@keyframes scale {
+  0% {
+    opacity: 1;
+    transform:scale(1);
+  }
+
+  100% {
+    opacity: 0.5;
+    transform:scale(3);
+  }
+}
+
+</style>

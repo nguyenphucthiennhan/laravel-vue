@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -24,3 +25,6 @@ Route::get('/get-categories', [HomeController::class, 'categories'])->name('cate
 Route::get('/get-products-bycate/{id}', [HomeController::class, 'productsByCate'])->name('products.bycate');
 Route::get('/search/{searchKeyword}', [HomeController::class, 'search'])->name('search');
 Route::post('/register', [HomeController::class, 'register'])->name('register');
+Route::post('/login', [HomeController::class, 'login'])->name('login');
+Route::post('/like', [HomeController::class, 'like'])->name('like');
+Route::post('/like-status', [HomeController::class, 'likeStatus'])->name('like.status');
