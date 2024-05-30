@@ -5,7 +5,7 @@
         <div class="col-lg-6">
           <div class="section-heading">
             <h6>Action</h6>
-            <h2>Related Games</h2>
+            <h2 class="text-light">Related Games</h2>
           </div>
         </div>
         <div class="col-lg-6">

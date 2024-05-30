@@ -54,5 +54,16 @@ const home = [
             },
         ],
     },
+    {
+        path: "/",
+        component: () => import("../layouts/liked.vue"),
+        children: [
+            {
+                path: 'liked-game',
+                name: "liked-game",
+                component: () => import("../pages/user/Liked.vue"),
+            },
+        ],
+    },
 ];
 export default home;

@@ -1,6 +1,6 @@
     <template>
         <div class="container py-5">
-            <h1 class="py-5">Your Search Here</h1>
+            <h1 class="py-5 text-light">Your Search Here</h1>
             <div class="row trending-box">
                 <div class="col-lg-3 col-md-6 align-self-center mb-30 trending-items col-md-6 adv"
                     v-for="product in filteredProducts" :key="product.id">

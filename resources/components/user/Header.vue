@@ -14,7 +14,7 @@
                         <ul class="nav">
                             <li><router-link to="/home" active-class="active">Home</router-link></li>
                             <li><router-link to="/shop" active-class="active">Shop</router-link></li>
-                            <li><router-link to="/details" active-class="active">Details</router-link></li>
+                            <li><router-link to="/liked-game" active-class="active">Liked list</router-link></li>
                             <li><a href="contact.html">Contact Us</a></li>
                             <li class="text-light">Wellcome {{ name }}</li>
                             <li v-if="name">

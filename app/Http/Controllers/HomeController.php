@@ -118,4 +118,15 @@ class HomeController extends Controller
            return 0;
         }
     }
+    public function liked($id)
+    {
+        $products =
+         Product::join('userlike', 'products.id', '=', 'userlike.product_id')
+        ->join('users', 'users.id', '=', 'userlike.user_id')
+        ->select('products.*') 
+        ->with('images')
+        ->where('users.id', '=', $id)
+        ->get();
+    return $products;
+    }
 }

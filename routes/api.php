@@ -28,3 +28,4 @@ Route::post('/register', [HomeController::class, 'register'])->name('register');
 Route::post('/login', [HomeController::class, 'login'])->name('login');
 Route::post('/like', [HomeController::class, 'like'])->name('like');
 Route::post('/like-status', [HomeController::class, 'likeStatus'])->name('like.status');
+Route::get('/liked/{id}', [HomeController::class, 'liked'])->name('liked');

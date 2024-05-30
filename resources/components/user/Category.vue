@@ -6,7 +6,7 @@
         <div class="col-lg-12 text-center">
           <div class="section-heading">
             <h6>Categories</h6>
-            <h2>Top Categories</h2>
+            <h2  class="text-light">Top Categories</h2>
           </div>
         </div>
         <div class="col-lg col-sm-6 col-xs-12">

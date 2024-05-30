@@ -8,9 +8,9 @@
           </div>
         </div>
         <div class="col-lg-6 align-self-center">
-          <h4>{{ product.name }}</h4>
+          <h4 class="text-light">{{ product.name }}</h4>
           <span class="price"><em>{{ product.price }}</em> {{ product.discount }}</span>
-          <p>{{ product.description }}</p>
+          <p class="text-light">{{ product.description }}</p>
           <form id="qty" action="#">
             <input type="qty" class="form-control" id="1" aria-describedby="quantity" placeholder="1">
             <button type="submit"><i class="fa fa-shopping-bag"></i> ADD TO CART</button>
@@ -18,8 +18,8 @@
           <br>
           <div class="like" v-bind:class="{ 'text-danger': liked === 1 }" @click="sendLike"
             style="font-size: 3em; display: inline-block;">♡ </div>
-            <span v-if="likeStatus === 0" class="count-like" style="font-size: 1.5em;">{{ product.like }}</span>
-            <span v-else class="count-like" style="font-size: 1.5em;">{{ likeStatus }}</span>
+            <span v-if="likeStatus === 0" class="count-like text-light" style="font-size: 1.5em;">{{ product.like }}</span>
+            <span v-else class="count-like text-light" style="font-size: 1.5em;">{{ likeStatus }}</span>
         </div>
         <div class="col-lg-12">
           <div class="sep">
