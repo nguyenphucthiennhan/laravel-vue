@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         //
-        Schema::create('userlike', function (Blueprint $table) {
+        Schema::create('carts', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->bigInteger('user_id');
             $table->bigInteger('product_id');
             $table->timestamps();
@@ -25,6 +26,6 @@ return new class extends Migration
     public function down(): void
     {
         //
-        Schema::dropIfExists('userlike');
+        Schema::dropIfExists('carts');
     }
 };

@@ -1,10 +1,8 @@
 import './bootstrap';
 import './bootstrap';
 import './jquery.min.js';
-import './counter.js';
 import './custom.js';
 import './isotope.min.js';
-import './owl-carousel.js';
 import { createApp } from 'vue';
 import router from '../router/index.js';
 import App from './App.vue';

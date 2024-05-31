@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Product;
@@ -10,7 +11,6 @@ use App\Models\UserAuth;
 use App\Models\UserLike;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-
 class HomeController extends Controller
 {
     //
@@ -129,4 +129,51 @@ class HomeController extends Controller
         ->get();
     return $products;
     }
+  public function addToCart(Request $request)
+  {
+      $user_id = $request->input('user_id');
+      $product_id = $request->input('product_id');
+      $cart = Cart::where('user_id', $user_id)->where('product_id', $product_id)->first();
+      if($cart){
+        return 0;
+      }else{
+          Cart::create([
+              'user_id' => $user_id,
+              'product_id' => $product_id,
+              'created_at' => now(),
+              'updated_at' => now()
+          ]);
+          return 1;
+      }
+  }
+  public function destroye(Request $request)
+  {
+      $user_id = $request->input('user_id');
+      $product_id = $request->input('product_id');
+      Cart::where('user_id', $user_id)->where('product_id', $product_id)->delete();
+      return 1;
+      
+  }
+  public function destroyLike(Request $request)
+  {
+      $user_id = $request->input('user_id');
+      $product_id = $request->input('product_id');
+      UserLike::where('user_id', $user_id)->where('product_id', $product_id)->delete();
+      $product = Product::find($product_id); 
+      $product->like += -1; 
+      $product->save(); 
+      return 1;
+  }
+  public function cart($id)
+  {
+    $products = 
+     Product::join('carts', 'products.id', '=', 'carts.product_id')
+    ->join('users', 'carts.user_id', '=', 'users.id')
+    ->where('users.id', $id)
+    ->select('products.*') 
+    ->with('images')
+    ->get();
+
+        return $products;
+  }
 }

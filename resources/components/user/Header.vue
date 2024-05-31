@@ -7,7 +7,7 @@
                     <nav class="main-nav">
                         <!-- ***** Logo Start ***** -->
                         <a href="index.html" class="logo">
-                            <img src="../../images/logo.png" alt="" style="width: 158px;">
+                            <img src="../../images/lg2.jpg" alt="" style="width: 58px;">
                         </a>
                         <!-- ***** Logo End ***** -->
                         <!-- ***** Menu Start ***** -->
@@ -15,7 +15,7 @@
                             <li><router-link to="/home" active-class="active">Home</router-link></li>
                             <li><router-link to="/shop" active-class="active">Shop</router-link></li>
                             <li><router-link to="/liked-game" active-class="active">Liked list</router-link></li>
-                            <li><a href="contact.html">Contact Us</a></li>
+                            <li><router-link to="/cart" active-class="active">Cart</router-link></li>
                             <li class="text-light">Wellcome {{ name }}</li>
                             <li v-if="name">
                                 <div @click="logout" class="btn btn-danger">Logout</div>

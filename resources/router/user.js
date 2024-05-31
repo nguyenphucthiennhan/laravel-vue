@@ -1,3 +1,5 @@
+import Cart from "../layouts/cart.vue";
+
 const home = [
     {
         path: "/",
@@ -62,6 +64,17 @@ const home = [
                 path: 'liked-game',
                 name: "liked-game",
                 component: () => import("../pages/user/Liked.vue"),
+            },
+        ],
+    },
+    {
+        path: "/",
+        component: () => import("../layouts/cart.vue"),
+        children: [
+            {
+                path: 'cart',
+                name: "cart",
+                component: () => import("../pages/user/Details.vue"),
             },
         ],
     },

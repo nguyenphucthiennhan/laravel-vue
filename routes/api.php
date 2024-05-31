@@ -29,3 +29,7 @@ Route::post('/login', [HomeController::class, 'login'])->name('login');
 Route::post('/like', [HomeController::class, 'like'])->name('like');
 Route::post('/like-status', [HomeController::class, 'likeStatus'])->name('like.status');
 Route::get('/liked/{id}', [HomeController::class, 'liked'])->name('liked');
+Route::post('/add-to-cart', [HomeController::class, 'addToCart'])->name('add.cart');
+Route::get('/cart/{id}', [HomeController::class, 'cart'])->name('cart');
+Route::post('/delete-cart', [HomeController::class, 'destroye'])->name('delete.cart');
+Route::post('/delete-like', [HomeController::class, 'destroyLike'])->name('delete.like');

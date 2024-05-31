@@ -11,18 +11,18 @@
           <h4 class="text-light">{{ product.name }}</h4>
           <span class="price"><em>{{ product.price }}</em> {{ product.discount }}</span>
           <p class="text-light">{{ product.description }}</p>
-          <form id="qty" action="#">
-            <input type="qty" class="form-control" id="1" aria-describedby="quantity" placeholder="1">
-            <button type="submit"><i class="fa fa-shopping-bag"></i> ADD TO CART</button>
-          </form>
+          <div @click="addToCart" class="btn btn-danger my-3" type="submit"> ADD TO CART</div>
+          <div class="text-danger">{{ message }}</div>
           <br>
           <div class="like" v-bind:class="{ 'text-danger': liked === 1 }" @click="sendLike"
             style="font-size: 3em; display: inline-block;">♡ </div>
-            <span v-if="likeStatus === 0" class="count-like text-light" style="font-size: 1.5em;">{{ product.like }}</span>
-            <span v-else class="count-like text-light" style="font-size: 1.5em;">{{ likeStatus }}</span>
+          <span v-if="likeStatus === 0" class="count-like text-light" style="font-size: 1.5em;">{{ product.like
+            }}</span>
+          <span v-else class="count-like text-light" style="font-size: 1.5em;">{{ likeStatus }}</span>
         </div>
-        <div class="col-lg-12">
+        <div class="col-lg-12" v-for="image in product.images">
           <div class="sep">
+            <img class="move-up" :src="'http://[::1]:5173/resources/images/' + image.name" alt="">
           </div>
         </div>
       </div>
@@ -77,7 +77,8 @@ export default {
       productId: null,
       product: [],
       likeStatus: 0,
-      liked: 0
+      liked: 0,
+      message: null,
     };
   },
   created() {
@@ -126,21 +127,56 @@ export default {
         console.error(error);
       }
     },
-  }
+    async addToCart() {
+      try {
+        let user_id = JSON.parse(localStorage.getItem('id'));
+        const response = await axios.post('http://localhost:8000/api/add-to-cart', {
+          user_id: user_id,
+          product_id: this.product.id,
+        });
+        if (response.data === 0) {
+          this.message = 'This product is already in your cart!';
+          if (this.message !== null) {
+            setTimeout(() => {
+              this.message = null;
+            }, 5000); 
+          }
+          } else {
+            const moveup = document.querySelector('.move-up');
+            moveup.style.opacity = '1';
+            moveup.style.transition = '1s ease-out';
+            moveup.style.top = '-10%';
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      },
+    }
 
-};
+  };
 </script>
 <style scoped>
 .count-like {
   position: absolute;
   animation: visible 1s cubic-bezier(0.6, -0.28, 0.735, 0.045) both;
 }
+
 .like {
   transition: 1s cubic-bezier(0.6, -0.28, 0.735, 0.045);
 }
+
 .like:hover {
   animation: scale 1s infinite ease-out alternate;
 }
+
+.move-up {
+  position: absolute;
+  width: 100px;
+  top: 85%;
+  left: 50%;
+  opacity: 0;
+}
+
 @keyframes visible {
   0% {
     opacity: 0;
@@ -152,16 +188,16 @@ export default {
     transform: rotate(1800deg);
   }
 }
+
 @keyframes scale {
   0% {
     opacity: 1;
-    transform:scale(1);
+    transform: scale(1);
   }
 
   100% {
     opacity: 0.5;
-    transform:scale(3);
+    transform: scale(3);
   }
 }
-
 </style>
