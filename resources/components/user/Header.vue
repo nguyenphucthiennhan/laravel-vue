@@ -18,6 +18,9 @@
                             <li><router-link to="/cart" active-class="active">Cart</router-link></li>
                             <li class="text-light">Wellcome {{ name }}</li>
                             <li v-if="name">
+                                <router-link to="your-game" active-class="active">Your game</router-link>
+                            </li>
+                            <li v-if="name">
                                 <div @click="logout" class="btn btn-danger">Logout</div>
                             </li>
                             <li v-else>

@@ -78,5 +78,27 @@ const home = [
             },
         ],
     },
+    {
+        path: "/",
+        component: () => import("../layouts/payment.vue"),
+        children: [
+            {
+                path: 'payment',
+                name: "payment",
+                component: () => import("../pages/user/Shop.vue"),
+            },
+        ],
+    },
+    {
+        path: "/",
+        component: () => import("../layouts/yourgames.vue"),
+        children: [
+            {
+                path: 'your-game',
+                name: "YourGame",
+                component: () => import("../pages/user/YourGame.vue"),
+            },
+        ],
+    },
 ];
 export default home;

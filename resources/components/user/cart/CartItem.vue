@@ -21,10 +21,11 @@
                 </tr>
             </tbody>
         </table>
-        <div class="btn btn-info p-2 my-5 text-light fw-bold">Pay For All </div>
+        <div class="btn btn-info p-2 my-5 text-light fw-bold" @click="payForAll">Pay For All </div>
         <h3 class="text-info">Total: {{ total }} $</h3>
     </div>
 </template>
+
 <script>
 export default {
     data() {
@@ -53,24 +54,32 @@ export default {
         async destroye(productId) {
             try {
                 let id = JSON.parse(localStorage.getItem('id'));
-                const response = await axios.post(`http://localhost:8000/api/delete-cart`,{
+                const response = await axios.post(`http://localhost:8000/api/delete-cart`, {
                     user_id: id,
                     product_id: productId
                 });
                 const tr = document.querySelector(`#id${productId}`);
-                tr.style.transform ='scale(5)';
-                tr.style.opacity ='0';
-                tr.style.transition ='1s ease-out';
+                tr.style.transform = 'scale(5)';
+                tr.style.opacity = '0';
+                tr.style.transition = '1s ease-out';
                 this.getProduct();
             } catch (error) {
                 console.error(error);
             }
         },
+        payForAll() {
+            localStorage.removeItem('productCart');
+            localStorage.removeItem('amount');
 
+            localStorage.setItem('productCart', JSON.stringify(this.products));
+            localStorage.setItem('amount', JSON.stringify(this.total));
+            this.$router.push('/payment');
+        }
 
     }
 }
 </script>
+
 <style scoped>
 table {
     width: 100%;

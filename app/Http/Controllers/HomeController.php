@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\Category;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\User;
@@ -11,6 +12,7 @@ use App\Models\UserAuth;
 use App\Models\UserLike;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+
 class HomeController extends Controller
 {
     //
@@ -89,11 +91,11 @@ class HomeController extends Controller
         $user_id = $request->input('user_id');
         $product_id = $request->input('product_id');
         $like = UserLike::where('user_id', $user_id)->where('product_id', $product_id)->first();
-        $product = Product::find($product_id); 
+        $product = Product::find($product_id);
         if ($like) {
             $like = UserLike::where('user_id', $user_id)->where('product_id', $product_id)->delete();
-            $product->like += -1; 
-            $product->save(); 
+            $product->like += -1;
+            $product->save();
             return 0;
         } else {
             $like = UserLike::create([
@@ -102,8 +104,8 @@ class HomeController extends Controller
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
-            $product->like += 1; 
-            $product->save(); 
+            $product->like += 1;
+            $product->save();
             return $product->like;
         }
     }
@@ -115,65 +117,101 @@ class HomeController extends Controller
         if ($like) {
             return 1;
         } else {
-           return 0;
+            return 0;
         }
     }
     public function liked($id)
     {
         $products =
-         Product::join('userlike', 'products.id', '=', 'userlike.product_id')
-        ->join('users', 'users.id', '=', 'userlike.user_id')
-        ->select('products.*') 
-        ->with('images')
-        ->where('users.id', '=', $id)
-        ->get();
-    return $products;
+            Product::join('userlike', 'products.id', '=', 'userlike.product_id')
+            ->join('users', 'users.id', '=', 'userlike.user_id')
+            ->select('products.*')
+            ->with('images')
+            ->where('users.id', '=', $id)
+            ->get();
+        return $products;
     }
-  public function addToCart(Request $request)
-  {
-      $user_id = $request->input('user_id');
-      $product_id = $request->input('product_id');
-      $cart = Cart::where('user_id', $user_id)->where('product_id', $product_id)->first();
-      if($cart){
-        return 0;
-      }else{
-          Cart::create([
-              'user_id' => $user_id,
-              'product_id' => $product_id,
-              'created_at' => now(),
-              'updated_at' => now()
-          ]);
-          return 1;
-      }
-  }
-  public function destroye(Request $request)
-  {
-      $user_id = $request->input('user_id');
-      $product_id = $request->input('product_id');
-      Cart::where('user_id', $user_id)->where('product_id', $product_id)->delete();
-      return 1;
-      
-  }
-  public function destroyLike(Request $request)
-  {
-      $user_id = $request->input('user_id');
-      $product_id = $request->input('product_id');
-      UserLike::where('user_id', $user_id)->where('product_id', $product_id)->delete();
-      $product = Product::find($product_id); 
-      $product->like += -1; 
-      $product->save(); 
-      return 1;
-  }
-  public function cart($id)
-  {
-    $products = 
-     Product::join('carts', 'products.id', '=', 'carts.product_id')
-    ->join('users', 'carts.user_id', '=', 'users.id')
-    ->where('users.id', $id)
-    ->select('products.*') 
-    ->with('images')
-    ->get();
+    public function addToCart(Request $request)
+    {
+        $user_id = $request->input('user_id');
+        $product_id = $request->input('product_id');
+        $cart = Cart::where('user_id', $user_id)->where('product_id', $product_id)->first();
+        if ($cart) {
+            return 0;
+        } else {
+            Cart::create([
+                'user_id' => $user_id,
+                'product_id' => $product_id,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+            return 1;
+        }
+    }
+    public function destroye(Request $request)
+    {
+        $user_id = $request->input('user_id');
+        $product_id = $request->input('product_id');
+        Cart::where('user_id', $user_id)->where('product_id', $product_id)->delete();
+        return 1;
+    }
+    public function destroyLike(Request $request)
+    {
+        $user_id = $request->input('user_id');
+        $product_id = $request->input('product_id');
+        UserLike::where('user_id', $user_id)->where('product_id', $product_id)->delete();
+        $product = Product::find($product_id);
+        $product->like += -1;
+        $product->save();
+        return 1;
+    }
+    public function cart($id)
+    {
+        $products =
+            Product::join('carts', 'products.id', '=', 'carts.product_id')
+            ->join('users', 'carts.user_id', '=', 'users.id')
+            ->where('users.id', $id)
+            ->select('products.*')
+            ->with('images')
+            ->get();
 
         return $products;
-  }
+    }
+    public function pay(Request $request)
+    {
+        $user_id = $request->input('user_id');
+        $products = $request->input('products');
+        foreach ($products as $product) {
+            $payment = new Payment;
+            $payment->user_id = $user_id;
+            $payment->product_id = $product['id'];
+            $payment->amount = $product['discount'];
+            $payment->created_at = now();
+            $payment->updated_at = now();
+            $payment->save();
+        }
+        Cart::where('user_id', $user_id)->delete();
+        return 1;
+    }
+    public function paymentStatus(Request $request)
+    {
+        $user_id = $request->input('user_id');
+        $product_id = $request->input('product_id');
+        if(Payment::where('user_id', $user_id)->where('product_id', $product_id)->first()){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+    public function getYourGames($id)
+    {
+        $products =
+            Product::join('payments', 'products.id', '=', 'payments.product_id')
+            ->join('users', 'users.id', '=', 'payments.user_id')
+            ->where('users.id', $id)
+            ->select('products.*')
+            ->with('images')
+            ->get();
+        return $products;
+    }
 }

@@ -11,7 +11,8 @@
           <h4 class="text-light">{{ product.name }}</h4>
           <span class="price"><em>{{ product.price }}</em> {{ product.discount }}</span>
           <p class="text-light">{{ product.description }}</p>
-          <div @click="addToCart" class="btn btn-danger my-3" type="submit"> ADD TO CART</div>
+          <div v-if="paymentStatus===0" @click="addToCart" class="btn btn-danger my-3" type="submit"> ADD TO CART</div>
+          <div v-else class="btn btn-primary my-3" type="submit">INSTALL</div>
           <div class="text-danger">{{ message }}</div>
           <br>
           <div class="like" v-bind:class="{ 'text-danger': liked === 1 }" @click="sendLike"
@@ -79,6 +80,7 @@ export default {
       likeStatus: 0,
       liked: 0,
       message: null,
+      paymentStatus:0
     };
   },
   created() {
@@ -93,6 +95,7 @@ export default {
       }
       this.product = await response.json();
       this.getStatusLike();
+      this.getStatusOfPayment();
     } catch (error) {
       console.error(error);
     }
@@ -145,14 +148,25 @@ export default {
             const moveup = document.querySelector('.move-up');
             moveup.style.opacity = '1';
             moveup.style.transition = '1s ease-out';
-            moveup.style.top = '-10%';
+            moveup.style.top = '-20%';
           }
         } catch (error) {
           console.error(error);
         }
       },
-    }
-
+      async getStatusOfPayment() {
+        try {
+          let user_id = JSON.parse(localStorage.getItem('id'));
+          const response = await axios.post('http://localhost:8000/api/get-payment-status', {
+            user_id: user_id,
+            product_id: this.product.id,
+          });
+        this.paymentStatus = response.data;
+          } catch (error) {
+            console.error(error);
+          }
+        },
+    },
   };
 </script>
 <style scoped>

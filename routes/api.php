@@ -33,3 +33,6 @@ Route::post('/add-to-cart', [HomeController::class, 'addToCart'])->name('add.car
 Route::get('/cart/{id}', [HomeController::class, 'cart'])->name('cart');
 Route::post('/delete-cart', [HomeController::class, 'destroye'])->name('delete.cart');
 Route::post('/delete-like', [HomeController::class, 'destroyLike'])->name('delete.like');
+Route::post('/pay', [HomeController::class, 'pay'])->name('pay');
+Route::get('/get-your-games/{id}', [HomeController::class, 'getYourGames'])->name('getyourgames');
+Route::post('/get-payment-status', [HomeController::class, 'paymentStatus'])->name('payment.status');
