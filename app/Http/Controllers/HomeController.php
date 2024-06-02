@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Models\UserAuth;
 use App\Models\UserLike;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class HomeController extends Controller
@@ -212,6 +213,17 @@ class HomeController extends Controller
             ->select('products.*')
             ->with('images')
             ->get();
+        return $products;
+    }
+    public function getTrendingGames()
+    {
+        $products = Product::join('payments', 'products.id', '=', 'payments.product_id')
+        ->select('products.*', DB::raw('COUNT(*) as frequency'))
+        ->with('images')
+        ->groupBy('products.id')
+        ->orderBy(DB::raw('COUNT(*)'), 'DESC')
+        ->take(4)
+        ->get();
         return $products;
     }
 }

@@ -76,8 +76,6 @@ export default {
 .login label {
     display: block;
     margin-top: 10px;
-
-
 }
 
 .login button {

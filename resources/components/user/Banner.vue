@@ -23,8 +23,6 @@
                 <div class="col-lg-4 offset-lg-2">
                     <div class="right-image">
                         <img src="../../images/logo_4x.jpg" alt="">
-                        <span class="price">$22</span>
-                        <span class="offer">-40%</span>
                     </div>
                 </div>
             </div>

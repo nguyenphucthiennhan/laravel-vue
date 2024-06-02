@@ -10,6 +10,18 @@ const admin=[
             }
         ]
 
+},
+    {
+        path:"/admin",
+        component:() => import("../layouts/products/index.vue"),
+        children: [
+            {
+                path: "products",
+                name: "admin-product",
+                component: () => import("../pages/admin/products/index.vue"),
+            }
+        ]
+
 }
   
     

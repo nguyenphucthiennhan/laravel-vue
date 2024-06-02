@@ -12,6 +12,8 @@
     
 </template>
 <script>
+import '../css/styles.css';
+import '../css/appgame.css';
 import Header from "../components/user/Header.vue";
 import Footer from "../components/user/Footer.vue";
 import Item from "../components/user/Item.vue";

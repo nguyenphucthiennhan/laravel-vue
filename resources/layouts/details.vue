@@ -12,8 +12,8 @@
    import HeaderDetails from "../components/user/details/HeaderDetails.vue";
   import DetailsContent from "../components/user/details/DetailsContent.vue";
   import RelatedItem from "../components/user/details/RelatedItem.vue";
-
-  
+  import '../css/styles.css';
+  import '../css/appgame.css';
  
     export default {
         components: {

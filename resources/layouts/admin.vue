@@ -6,7 +6,7 @@
 </template>
 <script>
 import TheHeader from "../components/TheHeader.vue";
-
+import '../css/admin-style.css';
 export default {
     components: {
         TheHeader
