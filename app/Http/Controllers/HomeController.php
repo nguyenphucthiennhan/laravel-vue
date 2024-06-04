@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\Category;
+use App\Models\Category_Product;
+use App\Models\Image;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 use App\Models\Product;
@@ -13,6 +15,8 @@ use App\Models\UserLike;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\File;
+
 
 class HomeController extends Controller
 {
@@ -198,9 +202,9 @@ class HomeController extends Controller
     {
         $user_id = $request->input('user_id');
         $product_id = $request->input('product_id');
-        if(Payment::where('user_id', $user_id)->where('product_id', $product_id)->first()){
+        if (Payment::where('user_id', $user_id)->where('product_id', $product_id)->first()) {
             return 1;
-        }else{
+        } else {
             return 0;
         }
     }
@@ -218,12 +222,60 @@ class HomeController extends Controller
     public function getTrendingGames()
     {
         $products = Product::join('payments', 'products.id', '=', 'payments.product_id')
-        ->select('products.*', DB::raw('COUNT(*) as frequency'))
-        ->with('images')
-        ->groupBy('products.id')
-        ->orderBy(DB::raw('COUNT(*)'), 'DESC')
-        ->take(4)
-        ->get();
+            ->select('products.*', DB::raw('COUNT(*) as frequency'))
+            ->with('images')
+            ->groupBy('products.id')
+            ->orderBy(DB::raw('COUNT(*)'), 'DESC')
+            ->take(4)
+            ->get();
         return $products;
+    }
+    public function store(Request $request)
+    {
+        $product = new Product;
+        $product->name = $request->get('productName');
+        $product->price = $request->get('productPrice');
+        $product->description = $request->get('productDescription');
+        $product->status = 1;
+        $product->discount = 0;
+        $product->download = 0;
+        $product->like = 0;
+        $product->comment = 0;
+        $product->save();
+        $cate = $request->get('categoriesId');
+        foreach ($cate as $c) {
+            $category_product = new Category_Product;
+            $category_product->category_id = $c;
+            $category_product->product_id = $product->id;
+            $category_product->save();
+        }
+        if ($request->hasfile('productImage')) {
+            foreach ($request->file('productImage') as $file) {
+                $name = time() . '_' . $file->getClientOriginalName();
+                if (!file_exists(resource_path('images'))) {
+                    mkdir(resource_path('images'), 0777, true);
+                }
+                $file->move(resource_path('images'), $name);
+
+                $img = new Image;
+                $img->name = $name;
+                $img->product_id = $product->id;
+                $img->save();
+            }
+        }
+
+        return response()->json(['message' => 'Product created successfully']);
+    }
+    public function destroyProduct($id)
+    {
+        $product = Product::find($id);
+        Category_Product::where('product_id', $product->id)->delete();
+        foreach ($product->images as $image) {
+            File::delete(resource_path('images/' . $image->name));
+            $image->delete();
+        }
+        $product->delete();
+
+        return response()->json(['message' => 'Product deleted successfully']);
     }
 }

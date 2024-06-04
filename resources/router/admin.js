@@ -22,6 +22,18 @@ const admin=[
             }
         ]
 
+},
+    {
+        path:"/admin",
+        component:() => import("../layouts/products/create.vue"),
+        children: [
+            {
+                path: "create-product",
+                name: "create-product",
+                component: () => import("../pages/admin/products/index.vue"),
+            }
+        ]
+
 }
   
     

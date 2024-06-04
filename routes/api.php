@@ -37,3 +37,5 @@ Route::post('/pay', [HomeController::class, 'pay'])->name('pay');
 Route::get('/get-your-games/{id}', [HomeController::class, 'getYourGames'])->name('getyourgames');
 Route::post('/get-payment-status', [HomeController::class, 'paymentStatus'])->name('payment.status');
 Route::get('/get-trending-games', [HomeController::class, 'getTrendingGames'])->name('trending');
+Route::post('/add-product', [HomeController::class, 'store'])->name('create');
+Route::delete('/delete-product/{id}', [HomeController::class, 'destroyProduct'])->name('delete.product');
