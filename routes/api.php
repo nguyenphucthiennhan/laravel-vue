@@ -39,3 +39,6 @@ Route::post('/get-payment-status', [HomeController::class, 'paymentStatus'])->na
 Route::get('/get-trending-games', [HomeController::class, 'getTrendingGames'])->name('trending');
 Route::post('/add-product', [HomeController::class, 'store'])->name('create');
 Route::delete('/delete-product/{id}', [HomeController::class, 'destroyProduct'])->name('delete.product');
+Route::get('/revenue', [HomeController::class, 'revenue'])->name('revenue');
+Route::get('/revenueM', [HomeController::class, 'revenueM'])->name('revenueM');
+Route::get('/most-products', [HomeController::class, 'getLimitedProductCount'])->name('most');

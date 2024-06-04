@@ -278,4 +278,32 @@ class HomeController extends Controller
 
         return response()->json(['message' => 'Product deleted successfully']);
     }
+    public function revenue()
+    {
+        $revenueByDay = Payment::selectRaw('DATE(created_at) as date, SUM(amount) as revenue')
+            ->groupBy('date')
+            ->get();
+
+        return $revenueByDay;
+    }
+    public function revenueM()
+    {
+        $revenueByMonth = Payment::selectRaw('MONTH(created_at) as date, YEAR(created_at) as year, SUM(amount) as revenue')
+        ->groupBy('year', 'date')
+        ->get();
+
+    return $revenueByMonth;
+    }
+    public function getLimitedProductCount()
+    {
+        $products = Product::query()
+            ->from('products as p')
+            ->join('payments as pm', 'p.id', '=', 'pm.product_id')
+            ->select('p.name', Product::raw('COUNT(pm.id) as total_quantity'))
+            ->groupBy('p.name')
+            ->orderBy('total_quantity', 'DESC')
+            ->limit(7)
+            ->get();
+        return $products;
+    }
 }
